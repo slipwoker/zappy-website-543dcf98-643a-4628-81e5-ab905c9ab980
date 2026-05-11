@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>חינוך — בית הספר ללמידה משמחת</title>
+    <meta name="description" content="A unique school called &#39;The School for Joyful Learning&#39; where all learning is conducted through the tools of theater and music. The school embodies a creative a">
+    <meta name="keywords" content="חינוך, למידה באמצעות תיאטרון לילדים, חינוך אלטרנטיבי לילדים צעירים בישראל, חינוך יצירתי">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '543dcf98-643a-4628-81e5-ab905c9ab980',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="חינוך — בית הספר ללמידה משמחת">
+    <meta property="og:description" content="A unique school called &#39;The School for Joyful Learning&#39; where all learning is conducted through the tools of theater and music. The school embodies a creative a">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="חינוך — בית הספר ללמידה משמחת">
+    <meta name="twitter:description" content="A unique school called &#39;The School for Joyful Learning&#39; where all learning is conducted through the tools of theater and music. The school embodies a creative a">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+<nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="[business_phone]" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-----image-1.webp" alt="בית הספר ללמידה משמחת"></a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="#features">תכונות</a></li><li><a href="#about">אודות</a></li><li><a href="#gallery">גלריה</a></li><li><a href="#testimonials">המלצות</a></li><li><a href="#stats">נתונים</a></li></ul></div>
+
+    
+
+    <div class="nav-cta-container">
+      <a href="#contact" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-dark)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main>
+    <section data-band-index="0" id="hero" class="index-hero-section" data-layout-spec="בית-hero" dir="rtl" data-hero-type="fullscreen-scrim">
+  <!-- Background Image Layer -->
+  <div class="index-hero-bg">
+    <img data-hero-bg="true" data-placeholder="index-hero-image-1" data-context="Warm, cinematic natural-light photograph of joyful children learning through music and movement in a cozy classroom-rehearsal space. Children are singing, playing simple instruments, and acting expressively. The room has warm wooden tones, colorful scarves, musical notes on a chalkboard, and soft afternoon sunlight streaming through large windows. Faces are expressive and happy. Israeli school setting with multicultural children aged 6-12. Shallow depth of field, editorial photography style, warm cream and terracotta color grading." width="1400" height="900" src="/assets/site-index-hero-image-1.webp" alt="ילדים לומדים בשמחה דרך מוזיקה ותיאטרון בבית הספר ללמידה משמחת">
+  </div>
+
+  <!-- Scrim Overlay -->
+  <div class="index-hero-scrim" aria-hidden="true"></div>
+
+  <!-- Floating Music Note Decoration -->
+  <div class="index-hero-music-note" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 36V10L34 6V32" stroke="#7E8B63" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      <circle cx="8" cy="36" r="6" fill="#7E8B63"></circle>
+      <circle cx="30" cy="32" r="6" fill="#7E8B63"></circle>
+    </svg>
+  </div>
+
+  <!-- Hero Content Container -->
+  <div class="index-hero-container">
+    <div class="index-hero-card">
+      <!-- Card Inner Decoration: small terracotta accent line -->
+      <div class="index-hero-card-accent" aria-hidden="true"></div>
+
+      <div class="index-hero-card-body">
+        <span class="index-hero-eyebrow">חינוך דרך אמנות</span>
+
+        <h1 class="index-hero-h1">
+          כשהלמידה הופכת
+          <em class="index-hero-h1-em">לשמחה אמיתית</em>
+        </h1>
+
+        <h3 class="index-hero-subtitle">
+          בית הספר ללמידה משמחת — המקום שבו כל שיעור הוא הצגה, כל מושג הוא שיר, וכל ילד מגלה את עצמו דרך תיאטרון ומוזיקה.
+        </h3>
+
+        <div class="index-hero-ctas">
+          <a href="#contact" class="index-hero-btn-primary">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+            צרו קשר ושמעו עוד
+          </a>
+          <a href="#approach" class="index-hero-btn-secondary">
+            הגישה החינוכית שלנו
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Torn-Paper Divider -->
+  <div class="index-hero-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 88" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,88 L0,44 Q60,36 120,46 T240,40 Q300,46 360,36 T480,42 Q540,36 600,44 T720,38 Q780,44 840,36 T960,42 Q1020,38 1080,44 T1200,40 Q1260,46 1320,38 T1440,44 L1440,88 Z" fill="#F0E8DC"></path>
+      <path d="M0,88 L0,52 Q60,44 120,54 T240,48 Q300,54 360,44 T480,50 Q540,44 600,52 T720,46 Q780,52 840,44 T960,50 Q1020,46 1080,52 T1200,48 Q1260,54 1320,46 T1440,52 L1440,88 Z" fill="#F0E8DC" opacity="0.7"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="1" id="features" class="index-features-section" data-layout-spec="בית-features" dir="rtl">
+  <!-- Decorative leaf motif -->
+  <div class="ifs-leaf-motif" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg" width="120" height="160">
+      <path d="M60 150 C60 150 20 110 25 70 C30 30 60 10 60 10 C60 10 90 30 95 70 C100 110 60 150 60 150Z" stroke="#C96E4B" stroke-width="1.5" fill="none" opacity="0.18"></path>
+      <path d="M60 10 L60 150" stroke="#C96E4B" stroke-width="1" opacity="0.12"></path>
+      <path d="M60 50 C45 45 30 55 25 70" stroke="#C96E4B" stroke-width="1" opacity="0.12"></path>
+      <path d="M60 80 C45 75 32 82 28 95" stroke="#C96E4B" stroke-width="1" opacity="0.12"></path>
+      <path d="M60 50 C75 45 90 55 95 70" stroke="#C96E4B" stroke-width="1" opacity="0.12"></path>
+      <path d="M60 80 C75 75 88 82 92 95" stroke="#C96E4B" stroke-width="1" opacity="0.12"></path>
+    </svg>
+  </div>
+
+  <div class="ifs-container">
+    <!-- Centered intro block -->
+    <div class="ifs-intro">
+      <span class="ifs-eyebrow">שלושה עמודי תווך</span>
+      <h2 class="ifs-heading">למידה שמחה, יצירתית ומשמעותית</h2>
+      <p class="ifs-subheading">בבית הספר ללמידה משמחת, כל שיעור הוא הרפתקה אמנותית. אנחנו מאמינים שכשילדים לומדים דרך תיאטרון ומוזיקה, הם לא רק רוכשים ידע — הם מתפתחים מבפנים.</p>
+    </div>
+
+    <!-- 3-card grid with vertical stagger -->
+    <div class="ifs-cards-grid">
+
+      <!-- Card 1: Theater -->
+      <article class="ifs-card ifs-card--theater">
+        <div class="ifs-card-icon-area">
+          <svg data-element-type="icon" data-icon-type="svg" aria-hidden="true" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
+            <!-- Stage curtains -->
+            <rect x="4" y="8" width="48" height="34" rx="4" stroke="#C96E4B" stroke-width="1.5" fill="none"></rect>
+            <path d="M4 12 Q14 20 14 42" stroke="#C96E4B" stroke-width="1.5" fill="none"></path>
+            <path d="M52 12 Q42 20 42 42" stroke="#C96E4B" stroke-width="1.5" fill="none"></path>
+            <path d="M14 8 Q28 18 42 8" stroke="#C96E4B" stroke-width="1.5" fill="none"></path>
+            <!-- Star -->
+            <path d="M28 22 L29.5 26.5 L34 26.5 L30.5 29 L32 33.5 L28 31 L24 33.5 L25.5 29 L22 26.5 L26.5 26.5 Z" fill="#C96E4B" opacity="0.7"></path>
+            <!-- Stage base -->
+            <rect x="18" y="42" width="20" height="4" rx="2" fill="#C96E4B" opacity="0.2"></rect>
+            <rect x="22" y="46" width="12" height="3" rx="1.5" fill="#C96E4B" opacity="0.15"></rect>
+          </svg>
+        </div>
+        <div class="ifs-card-body">
+          <h3 class="ifs-card-title">למידה דרך תיאטרון</h3>
+          <p class="ifs-card-desc">כל מקצוע לימודי הופך לסצנה חיה. דרך משחק תפקידים, אלתור ויצירת מחזות, הילדים מבינים מושגים בצורה עמוקה ובלתי נשכחת — מתמטיקה, שפה, מדע ועוד.</p>
+          <span class="ifs-card-benefit">
+            <svg data-element-type="icon" data-icon-type="svg" aria-hidden="true" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+              <circle cx="8" cy="8" r="7" stroke="#7E8B63" stroke-width="1.2"></circle>
+              <path d="M5 8.5 L7 10.5 L11 6" stroke="#7E8B63" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            ביטחון עצמי, יצירתיות ומוטיבציה ללמידה
+          </span>
+        </div>
+      </article>
+
+      <!-- Card 2: Music (center, elevated) -->
+      <article class="ifs-card ifs-card--music ifs-card--elevated">
+        <div class="ifs-card-icon-area">
+          <svg data-element-type="icon" data-icon-type="svg" aria-hidden="true" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
+            <!-- Music staff lines -->
+            <line x1="8" y1="18" x2="48" y2="18" stroke="#7A93AC" stroke-width="1.2" opacity="0.5"></line>
+            <line x1="8" y1="23" x2="48" y2="23" stroke="#7A93AC" stroke-width="1.2" opacity="0.5"></line>
+            <line x1="8" y1="28" x2="48" y2="28" stroke="#7A93AC" stroke-width="1.2" opacity="0.5"></line>
+            <line x1="8" y1="33" x2="48" y2="33" stroke="#7A93AC" stroke-width="1.2" opacity="0.5"></line>
+            <line x1="8" y1="38" x2="48" y2="38" stroke="#7A93AC" stroke-width="1.2" opacity="0.5"></line>
+            <!-- Quarter note -->
+            <ellipse cx="22" cy="37" rx="4" ry="3" fill="#7A93AC"></ellipse>
+            <line x1="26" y1="37" x2="26" y2="18" stroke="#7A93AC" stroke-width="1.5"></line>
+            <!-- Eighth note -->
+            <ellipse cx="36" cy="34" rx="4" ry="3" fill="#C96E4B" opacity="0.8"></ellipse>
+            <line x1="40" y1="34" x2="40" y2="15" stroke="#C96E4B" stroke-width="1.5" opacity="0.8"></line>
+            <path d="M40 15 Q48 18 46 24" stroke="#C96E4B" stroke-width="1.5" fill="none" opacity="0.8"></path>
+            <!-- Treble clef hint -->
+            <path d="M14 14 C14 10 20 10 20 18 C20 26 12 28 12 34 C12 40 20 40 20 34" stroke="#C96E4B" stroke-width="1.5" fill="none" opacity="0.5"></path>
+          </svg>
+        </div>
+        <div class="ifs-card-body">
+          <h3 class="ifs-card-title">למידה דרך מוזיקה</h3>
+          <p class="ifs-card-desc">מקצב, מנגינה ושיר הופכים לכלי הוראה רבי עוצמה. ילדים לומדים שפה, חשבון ומדעים תוך כדי שירה, נגינה ויצירת מוזיקה — כי כשלב שמח, המוח קולט.</p>
+          <span class="ifs-card-benefit">
+            <svg data-element-type="icon" data-icon-type="svg" aria-hidden="true" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+              <circle cx="8" cy="8" r="7" stroke="#7E8B63" stroke-width="1.2"></circle>
+              <path d="M5 8.5 L7 10.5 L11 6" stroke="#7E8B63" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            שיפור זיכרון, ריכוז ואהבה ללמידה
+          </span>
+        </div>
+      </article>
+
+      <!-- Card 3: Emotional-Social -->
+      <article class="ifs-card ifs-card--social">
+        <div class="ifs-card-icon-area">
+          <svg data-element-type="icon" data-icon-type="svg" aria-hidden="true" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
+            <!-- Two figures holding hands -->
+            <circle cx="18" cy="14" r="5" stroke="#7E8B63" stroke-width="1.5" fill="none"></circle>
+            <circle cx="38" cy="14" r="5" stroke="#C96E4B" stroke-width="1.5" fill="none"></circle>
+            <!-- Bodies -->
+            <path d="M13 20 Q10 30 12 40" stroke="#7E8B63" stroke-width="1.5" fill="none" stroke-linecap="round"></path>
+            <path d="M23 20 Q26 30 24 40" stroke="#7E8B63" stroke-width="1.5" fill="none" stroke-linecap="round"></path>
+            <path d="M33 20 Q30 30 32 40" stroke="#C96E4B" stroke-width="1.5" fill="none" stroke-linecap="round"></path>
+            <path d="M43 20 Q46 30 44 40" stroke="#C96E4B" stroke-width="1.5" fill="none" stroke-linecap="round"></path>
+            <!-- Joined hands -->
+            <path d="M24 28 Q28 25 32 28" stroke="#C96E4B" stroke-width="1.5" fill="none" stroke-linecap="round"></path>
+            <!-- Heart above -->
+            <path d="M28 8 C28 6 26 4 24 6 C22 8 24 11 28 14 C32 11 34 8 32 6 C30 4 28 6 28 8Z" fill="#C96E4B" opacity="0.3"></path>
+          </svg>
+        </div>
+        <div class="ifs-card-body">
+          <h3 class="ifs-card-title">פיתוח רגשי-חברתי דרך ביטוי יצירתי</h3>
+          <p class="ifs-card-desc">בית ספרנו מטפח מרחב בטוח שבו כל ילד מוצא את קולו. דרך חינוך יצירתי ואמנות הבמה, ילדים לומדים לזהות רגשות, לשתף פעולה ולבנות קשרים אמיתיים.</p>
+          <span class="ifs-card-benefit">
+            <svg data-element-type="icon" data-icon-type="svg" aria-hidden="true" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+              <circle cx="8" cy="8" r="7" stroke="#7E8B63" stroke-width="1.2"></circle>
+              <path d="M5 8.5 L7 10.5 L11 6" stroke="#7E8B63" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            אינטליגנציה רגשית, שייכות ושמחה יומיומית
+          </span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Bottom scalloped SVG divider -->
+  <div class="ifs-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,70 L0,35 Q30,22 60,35 Q90,48 120,35 Q150,22 180,35 Q210,48 240,35 Q270,22 300,35 Q330,48 360,35 Q390,22 420,35 Q450,48 480,35 Q510,22 540,35 Q570,48 600,35 Q630,22 660,35 Q690,48 720,35 Q750,22 780,35 Q810,48 840,35 Q870,22 900,35 Q930,48 960,35 Q990,22 1020,35 Q1050,48 1080,35 Q1110,22 1140,35 Q1170,48 1200,35 L1200,70 Z" fill="#F5EDE3"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="2" id="about" class="index-about-section" data-layout-spec="בית-about" dir="rtl">
+  <!-- Decorative botanical motif -->
+  <div class="about-botanical-decor" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" width="130" height="130" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+      <path d="M20,110 Q30,80 60,60 Q80,48 100,30" stroke="#C96E4B" stroke-width="1.5" fill="none" opacity="0.18"></path>
+      <path d="M40,110 Q45,85 70,70 Q90,58 105,40" stroke="#7E8B63" stroke-width="1.2" fill="none" opacity="0.15"></path>
+      <ellipse cx="60" cy="60" rx="14" ry="8" transform="rotate(-30 60 60)" stroke="#C96E4B" stroke-width="1.2" fill="none" opacity="0.14"></ellipse>
+      <ellipse cx="80" cy="45" rx="12" ry="7" transform="rotate(-50 80 45)" stroke="#7E8B63" stroke-width="1.2" fill="none" opacity="0.13"></ellipse>
+      <ellipse cx="45" cy="80" rx="10" ry="6" transform="rotate(-20 45 80)" stroke="#C96E4B" stroke-width="1" fill="none" opacity="0.12"></ellipse>
+    </svg>
+  </div>
+
+  <div class="about-container">
+    <!-- Content Column (START = RIGHT in RTL) -->
+    <div class="about-content-col">
+      <span class="about-eyebrow">הפילוסופיה שלנו</span>
+      <h2 class="about-heading">כשלמידה הופכת<br><em class="about-heading-italic">לחוויה חיה</em></h2>
+
+      <p class="about-paragraph">בבית הספר ללמידה משמחת, כל מקצוע לימודי נחווה דרך תיאטרון, מוזיקה, קצב ודמיון. מתמטיקה מגיעה דרך תנועה, שפה נולדת מתוך משחק תפקידים, ומדעים מתגלים בהצגות מאולתרות. הילדים לא רק לומדים — הם יוצרים, מרגישים, ומתחברים.</p>
+
+      <p class="about-paragraph">אנו מאמינים שחינוך יצירתי אמיתי מטפח סקרנות, ביטחון עצמי ושמחה לצד הידע. כל ילד מוצא את קולו הייחודי בסביבה חמה, מכילה ובטוחה — מקום שבו ההבעה האישית נחגגת בכל יום.</p>
+
+      <!-- Quote accent -->
+      <blockquote class="about-quote">
+        <span class="about-quote-mark">״</span>כשהלב פתוח — הלמידה זורמת<span class="about-quote-mark">״</span>
+      </blockquote>
+
+      <!-- Values list -->
+      <ul class="about-values-list">
+        <li class="about-value-item">
+          <span class="about-value-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M6 10.5 L8.5 13 L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <div class="about-value-content">
+            <strong>למידה דרך ביצוע</strong>
+            <span>תיאטרון ומוזיקה כשפה חינוכית ראשית</span>
+          </div>
+        </li>
+        <li class="about-value-item">
+          <span class="about-value-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M6 10.5 L8.5 13 L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <div class="about-value-content">
+            <strong>ביטחון עצמי ובטוי אישי</strong>
+            <span>כל ילד מוצא את קולו ומפתח אומץ לבטא עצמו</span>
+          </div>
+        </li>
+        <li class="about-value-item">
+          <span class="about-value-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M6 10.5 L8.5 13 L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <div class="about-value-content">
+            <strong>שיתוף פעולה ויצירה קבוצתית</strong>
+            <span>האזנה, הובלה ויצירה יחד כמיומנות חיים</span>
+          </div>
+        </li>
+        <li class="about-value-item">
+          <span class="about-value-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+              <path d="M6 10.5 L8.5 13 L14 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+          <div class="about-value-content">
+            <strong>שמחה כעיקרון פדגוגי</strong>
+            <span>סביבה מכילה שבה סקרנות ושמחת למידה פורחות</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Imagery Column (END = LEFT in RTL) -->
+    <div class="about-imagery-col">
+      <div class="about-image-stack">
+        <!-- Main large image -->
+        <figure class="about-main-image-wrap">
+          <img data-placeholder="index-about-image-1" data-context="Natural-light editorial photograph of a group of young Israeli children (ages 6-10) in a warm, sunlit rehearsal room, sitting in a circle on the floor listening intently to a teacher who is playing a simple melody on a guitar. The children look engaged, curious, and joyful. Soft warm tones, wooden floor, cream walls with colorful art on them. Intimate and caring atmosphere. Warm golden-hour light, slightly editorial in style." width="560" height="420" src="/assets/site-index-about-image-1.webp" alt="ילדים מקשיבים ולומדים יחד בחדר חזרות חמים ומואר" class="about-main-img">
+        </figure>
+
+        <!-- Smaller paper backplate tile peeking from END-bottom corner -->
+        <figure class="about-peek-image-wrap">
+          <img data-placeholder="index-about-image-2" data-context="Close-up editorial photograph of two young Israeli children (ages 7-9) laughing and singing together, holding small percussion instruments like tambourines or maracas. Warm natural light, soft cream and terracotta background tones. Joyful, candid, emotionally warm moment. Slightly soft focus background." width="260" height="200" src="/assets/site-index-about-image-2.webp" alt="ילדים שרים ומנגנים יחד בשמחה" class="about-peek-img">
+        </figure>
+
+        <!-- Decorative accent dot cluster -->
+        <div class="about-dot-accent" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom diagonal divider -->
+  <div class="about-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,72 L0,28 L1440,0 L1440,72 Z" fill="#F5EDE3"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="3" id="gallery" class="index-gallery-section" data-layout-spec="בית-gallery" dir="rtl">
+  <div class="index-gallery-container">
+
+    <!-- Section Header -->
+    <div class="index-gallery-header">
+      <span class="index-gallery-label">חיי בית הספר</span>
+      <h2 class="index-gallery-title">רגעים של למידה, שמחה ויצירה</h2>
+      <p class="index-gallery-intro">בכל יום מתרחשים אצלנו רגעים של תנועה, מוזיקה, הקשבה, משחק וגילוי משותף. הילדים לומדים דרך הגוף, הקול והדמיון — בכיתה שמרגישה כמו חדר חזרות חי ופועם. הצצה קטנה לאווירה שמחכה לכם.</p>
+    </div>
+
+    <!-- Asymmetric Image Grid -->
+    <div class="index-gallery-grid">
+
+      <!-- Tile 1: Large landscape (start/right side) -->
+      <div class="index-gallery-tile tile-large">
+        <div class="index-gallery-img-wrap">
+          <img data-placeholder="index-gallery-image-1" data-context="Elementary school children engaged in a joyful theater rehearsal in a warm sunlit classroom. A group of 6-8 year old kids in colorful clothes act out a scene together, some mid-gesture with expressive faces, teacher gently guiding from the side. Documentary style warm photography, soft natural light, wooden floors, Israeli educational setting." width="700" height="460" src="/assets/site-index-gallery-image-1.webp" alt="ילדים בחזרת תיאטרון בכיתה">
+        </div>
+        <div class="index-gallery-tile-caption">תיאטרון בכיתה</div>
+      </div>
+
+      <!-- Right column: two portrait tiles stacked -->
+      <div class="index-gallery-col-right">
+
+        <!-- Tile 2: Medium portrait -->
+        <div class="index-gallery-tile tile-portrait">
+          <div class="index-gallery-img-wrap">
+            <img data-placeholder="index-gallery-image-2" data-context="A young child of about 7 years old sitting cross-legged on the floor playing a small percussion instrument like a tambourine or hand drum, eyes closed in concentration, warm afternoon light, cozy classroom corner with colorful cushions, Israeli school environment. Candid documentary photography." width="340" height="420" src="/assets/site-index-gallery-image-2.webp" alt="ילד מנגן בכלי הקשה">
+          </div>
+          <div class="index-gallery-tile-caption">מוזיקה ותנועה</div>
+        </div>
+
+        <!-- Tile 3: Medium portrait -->
+        <div class="index-gallery-tile tile-portrait">
+          <div class="index-gallery-img-wrap">
+            <img data-placeholder="index-gallery-image-3" data-context="Two children aged 8-9 collaborating over an open notebook filled with colorful hand-drawn illustrations and musical notes, pencils in hand, sitting at a wooden table in a warm creative classroom. Soft natural light from a window. Candid warm-toned documentary photography." width="340" height="420" src="/assets/site-index-gallery-image-3.webp" alt="ילדים עובדים יחד על מחברת יצירתית">
+          </div>
+          <div class="index-gallery-tile-caption">יצירה משותפת</div>
+        </div>
+
+      </div>
+
+      <!-- Tile 4: Small square detail (end/left side) -->
+      <div class="index-gallery-tile tile-square">
+        <div class="index-gallery-img-wrap">
+          <img data-placeholder="index-gallery-image-4" data-context="Close-up still life detail of tactile educational materials on a wooden surface: an open handmade notebook with colorful drawings, a small wooden recorder flute, a few colored pencils, and a paper theater mask. Warm natural light, soft shadows, documentary feel. Macro-style warm-toned photography." width="300" height="300" src="/assets/site-index-gallery-image-4.webp" alt="חפצים מחדר הלמידה — מחברת, חליל ומסכת נייר">
+        </div>
+        <div class="index-gallery-tile-caption">כלים ורגעים</div>
+
+        <!-- Decorative sketched mark in empty margin -->
+        <svg class="index-gallery-deco-mark" aria-hidden="true" data-no-icon-edit="true" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 5 C20 15, 10 25, 15 40 C18 50, 28 55, 30 70" stroke="#C96E4B" stroke-width="1.5" stroke-linecap="round" opacity="0.25"></path>
+          <path d="M30 40 C22 35, 14 38, 12 45" stroke="#C96E4B" stroke-width="1.2" stroke-linecap="round" opacity="0.2"></path>
+          <path d="M30 55 C38 50, 46 52, 48 58" stroke="#C96E4B" stroke-width="1.2" stroke-linecap="round" opacity="0.2"></path>
+          <circle cx="30" cy="5" r="2" fill="#C96E4B" opacity="0.2"></circle>
+        </svg>
+      </div>
+
+    </div>
+    <!-- /grid -->
+
+  </div>
+
+  <!-- Bottom gradient divider fading into testimonials section -->
+  <div class="index-gallery-divider-wrapper" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,45 Q150,30 300,48 T600,38 Q750,28 900,44 T1200,40 L1200,90 Z" fill="#2C1810"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section data-band-index="4" id="testimonials" class="index-testimonials-section" data-layout-spec="בית-testimonials" dir="rtl">
+  <!-- Decorative glow -->
+  <div class="its-glow-top" aria-hidden="true"></div>
+  <div class="its-glow-bottom" aria-hidden="true"></div>
+
+  <div class="its-container">
+    <!-- Section header -->
+    <div class="its-header">
+      <span class="its-label">מה אומרים עלינו</span>
+      <h2 class="its-title">קולות מן הלב</h2>
+      <p class="its-subtitle">הורים ומחנכים מספרים על השינוי שחוו ילדיהם בבית הספר ללמידה משמחת</p>
+    </div>
+
+    <!-- Testimonials grid -->
+    <div class="its-grid">
+
+      <!-- Card 1 -->
+      <article class="its-card its-card--side">
+        <div class="its-quote-mark" aria-hidden="true">״</div>
+        <blockquote class="its-quote">
+          <p>הבן שלי היה מגיע הביתה מבית הספר הישן עייף ומיואש. היום הוא רץ לבית הספר עם ניצוץ בעיניים. הוא לא רק לומד — הוא חי את הלמידה. ראיתי אותו עולה לבמה ומסביר שברים בשיר שהוא חיבר בעצמו, ולא האמנתי למה שראיתי.</p>
+        </blockquote>
+        <footer class="its-attribution">
+          <div class="its-rehearsal-mark" aria-hidden="true">
+            <svg data-no-icon-edit="true" aria-hidden="true" width="28" height="12" viewBox="0 0 28 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 6 Q7 2 14 6 Q21 10 26 6" stroke="#C96E4B" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+            </svg>
+          </div>
+          <span class="its-name">רחל כהן</span>
+          <span class="its-role">אמא לתלמיד כיתה ג׳</span>
+        </footer>
+      </article>
+
+      <!-- Card 2 — center featured -->
+      <article class="its-card its-card--center">
+        <div class="its-quote-mark" aria-hidden="true">״</div>
+        <blockquote class="its-quote">
+          <p>בעשרים שנות הוראה לא פגשתי מקום שמצליח לגרום לכל ילד להרגיש שהוא כישרון. כאן, הילד הביישן הופך לנרטור, הילד שמתקשה בחשבון מוצא את הפתרון דרך תנועה ומחול. זו לא שיטה — זו פילוסופיה שלמה של חינוך יצירתי שמשנה חיים.</p>
+        </blockquote>
+        <footer class="its-attribution">
+          <div class="its-rehearsal-mark" aria-hidden="true">
+            <svg data-no-icon-edit="true" aria-hidden="true" width="28" height="12" viewBox="0 0 28 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 6 Q7 2 14 6 Q21 10 26 6" stroke="#C96E4B" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+            </svg>
+          </div>
+          <span class="its-name">מיכל לוי</span>
+          <span class="its-role">מחנכת ומנחה חינוכית</span>
+        </footer>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="its-card its-card--side">
+        <div class="its-quote-mark" aria-hidden="true">״</div>
+        <blockquote class="its-quote">
+          <p>הבת שלי סבלה מחרדת בחינות קשה. מאז שעברה ללמידה באמצעות תיאטרון ומוזיקה, היא מגיעה לכל הערכה עם ביטחון. היא אומרת: ״אמא, זה כמו הצגה — אני יודעת את התפקיד שלי.״ זה שינה לה את כל הגישה ללמידה ולחיים.</p>
+        </blockquote>
+        <footer class="its-attribution">
+          <div class="its-rehearsal-mark" aria-hidden="true">
+            <svg data-no-icon-edit="true" aria-hidden="true" width="28" height="12" viewBox="0 0 28 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 6 Q7 2 14 6 Q21 10 26 6" stroke="#C96E4B" stroke-width="1.5" stroke-linecap="round" fill="none"></path>
+            </svg>
+          </div>
+          <span class="its-name">דנה אברהם</span>
+          <span class="its-role">אמא לתלמידת כיתה ה׳</span>
+        </footer>
+      </article>
+
+    </div>
+    <!-- end grid -->
+
+    <!-- Decorative note motif -->
+    <div class="its-note-motif" aria-hidden="true">
+      <svg data-no-icon-edit="true" aria-hidden="true" width="48" height="64" viewBox="0 0 48 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="14" cy="54" rx="10" ry="7" fill="#C96E4B" opacity="0.22"></ellipse>
+        <rect x="22" y="12" width="2.5" height="42" rx="1.25" fill="#C96E4B" opacity="0.22"></rect>
+        <path d="M24.5 12 Q38 8 40 18" stroke="#C96E4B" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.22"></path>
+      </svg>
+    </div>
+
+  </div>
+  <!-- end container -->
+
+  <!-- Bottom wave divider transitioning to next (light/cream) section -->
+  <div class="its-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,44 Q60,32 120,44 T240,40 Q300,48 360,36 T480,42 Q540,36 600,44 T720,38 Q780,46 840,36 T960,42 Q1020,36 1080,44 T1200,40 L1200,80 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section data-band-index="5" id="stats" class="index-stats-section" data-layout-spec="בית-stats" dir="rtl">
+  <!-- Paper texture overlay -->
+  <div class="index-stats-texture" aria-hidden="true"></div>
+
+  <!-- Intro block -->
+  <div class="index-stats-container">
+    <div class="index-stats-intro">
+      <span class="index-stats-label">מה שמייחד אותנו</span>
+      <h2 class="index-stats-heading">למידה שמחה, תוצאות אמיתיות</h2>
+      <p class="index-stats-subtext">בבית הספר ללמידה משמחת, כל שיעור הוא הרפתקה. אנחנו מאמינים שילדים לומדים בצורה הטובה ביותר כשהם מרגישים בטוחים, נראים ומשתתפים בשמחה — ולכן שילבנו כלים של תיאטרון ומוזיקה בלב כל תחום לימוד.</p>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="index-stats-grid">
+
+      <!-- Stat 1 -->
+      <article class="index-stats-tile index-stats-tile--featured">
+        <div class="index-stats-tile-inner">
+          <span class="index-stats-number">15+</span>
+          <span class="index-stats-unit">שנות ניסיון</span>
+          <p class="index-stats-desc">שנים של חינוך יצירתי וחדשני המשלב אמנות בלמידה אקדמית</p>
+        </div>
+        <!-- Side note beneath first tile -->
+        <aside class="index-stats-sidenote" aria-label="הערת אמון">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>מוכרים על ידי משרד החינוך כמוסד חינוך חלופי</span>
+        </aside>
+      </article>
+
+      <!-- Stat 2 -->
+      <article class="index-stats-tile">
+        <div class="index-stats-tile-inner">
+          <span class="index-stats-number">8–12</span>
+          <span class="index-stats-unit">תלמידים בקבוצה</span>
+          <p class="index-stats-desc">קבוצות קטנות המאפשרות תשומת לב אישית ומרחב ביטוי לכל ילד</p>
+        </div>
+      </article>
+
+      <!-- Stat 3 -->
+      <article class="index-stats-tile">
+        <div class="index-stats-tile-inner">
+          <span class="index-stats-number">6+</span>
+          <span class="index-stats-unit">פורמטים אמנותיים</span>
+          <p class="index-stats-desc">תיאטרון, מוזיקה, אלתור, סיפור, בימוי ועוד — כולם בשירות הלמידה</p>
+        </div>
+      </article>
+
+      <!-- Stat 4 -->
+      <article class="index-stats-tile">
+        <div class="index-stats-tile-inner">
+          <span class="index-stats-number">100%</span>
+          <span class="index-stats-unit">למידה בין-תחומית</span>
+          <p class="index-stats-desc">כל מקצוע אקדמי מוצג דרך עדשה אמנותית — מתמטיקה, שפה, מדעים ועוד</p>
+        </div>
+      </article>
+
+    </div>
+    <!-- end stats grid -->
+
+    <!-- Clarifying paragraph -->
+    <div class="index-stats-footnote">
+      <div class="index-stats-footnote-line" aria-hidden="true"></div>
+      <p>המספרים מספרים חלק מהסיפור — אבל מה שבאמת מייחד אותנו הוא האווירה: מקום שבו ילד מרגיש שמותר לו לטעות, לנסות, להתבטא ולגדול. <em>חינוך יצירתי</em> אינו רק שיטה — זו פילוסופיה שמלווה כל רגע בכיתה.</p>
+      <div class="index-stats-trust-badges">
+        <span class="index-stats-badge">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          סביבה בטוחה ותומכת
+        </span>
+        <span class="index-stats-badge">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          צוות מורים מנוסה ואוהב
+        </span>
+        <span class="index-stats-badge">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          מתאים לכל סגנון למידה
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom divider: notebook paper rip edge -->
+  <div class="index-stats-divider-wrapper">
+    <div class="index-stats-terracotta-rule" aria-hidden="true"></div>
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,42 Q30,36 60,44 T130,38 Q170,44 210,36 T290,42 Q330,36 380,44 T460,38 Q510,44 560,36 T640,42 Q680,36 730,44 T810,38 Q860,44 910,36 T990,42 Q1040,36 1090,44 T1170,38 Q1210,44 1260,36 T1340,42 Q1380,36 1410,44 L1440,40 L1440,90 Z" fill="#2E2A26"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="6" id="contact" class="index-contact-section" data-layout-spec="בית-contact" dir="rtl">
+  <!-- Decorative theater curtain SVG -->
+  <div class="contact-curtain-decor" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 220 320" fill="none" xmlns="http://www.w3.org/2000/svg" width="220" height="320">
+      <path d="M20,0 Q0,40 10,80 Q25,120 5,160 Q-10,200 15,240 Q35,280 10,320 L0,320 L0,0 Z" fill="#C96E4B" opacity="0.18"></path>
+      <path d="M200,0 Q220,40 210,80 Q195,120 215,160 Q230,200 205,240 Q185,280 210,320 L220,320 L220,0 Z" fill="#C96E4B" opacity="0.12"></path>
+      <circle cx="20" cy="12" r="8" fill="#C96E4B" opacity="0.25"></circle>
+      <circle cx="200" cy="12" r="8" fill="#C96E4B" opacity="0.18"></circle>
+    </svg>
+  </div>
+
+  <div class="contact-outer-wrapper">
+    <div class="contact-inner-card">
+
+      <!-- Text Column -->
+      <div class="contact-text-col">
+        <span class="contact-label-tag">צרו קשר</span>
+        <h2 class="contact-heading">מוזמנים להצטרף<br><em>לשמחת הלמידה</em></h2>
+        <p class="contact-lead">בית הספר ללמידה משמחת פותח את דלתותיו להורים, מחנכים ומשפחות שמחפשים דרך חינוכית אחרת — כזו שמאמינה שילדים לומדים הכי טוב כשהם שרים, משחקים ויוצרים.</p>
+
+        <ul class="contact-who-list">
+          <li>
+            <span class="contact-who-icon" aria-hidden="true">
+              <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+            </span>
+            <span>הורים המחפשים חינוך יצירתי ואלטרנטיבי לילדיהם</span>
+          </li>
+          <li>
+            <span class="contact-who-icon" aria-hidden="true">
+              <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L2 9l10 6 10-6-10-6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><path d="M2 17l10 6 10-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2 13l10 6 10-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span>מחנכים ואנשי חינוך המעוניינים לשתף פעולה</span>
+          </li>
+          <li>
+            <span class="contact-who-icon" aria-hidden="true">
+              <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.8"></circle><circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.8"></circle></svg>
+            </span>
+            <span>משפחות שרוצות ללמוד עוד על למידה באמצעות תיאטרון ומוזיקה</span>
+          </li>
+          <li>
+            <span class="contact-who-icon" aria-hidden="true">
+              <svg data-element-type="icon" data-icon-type="svg" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span>כל מי שלבו פתוח לדרך חדשה ושמחה של חינוך</span>
+          </li>
+        </ul>
+
+        <div class="contact-direct-info">
+          <div class="contact-info-item">
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+            
+          </div>
+          <div class="contact-info-item">
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+            
+          </div>
+          <div class="contact-info-item">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Column -->
+      <div class="contact-form-col">
+        <div class="contact-form-card">
+          <h3 class="form-card-title">שלחו לנו הודעה</h3>
+          <p class="form-card-sub">נחזור אליכם תוך יום עסקים — בשמחה ובחום.</p>
+
+          <form class="contact-form" novalidate="">
+            <div class="form-field">
+              <label for="contact-name">שם מלא</label>
+              <input type="text" id="contact-name" name="name" placeholder="השם שלכם" required="">
+            </div>
+            <div class="form-field">
+              <label for="contact-email">דואר אלקטרוני</label>
+              <input type="email" id="contact-email" name="email" placeholder="your@email.com" required="">
+            </div>
+            <div class="form-field">
+              <label for="contact-phone">טלפון</label>
+              <input type="tel" id="contact-phone" name="phone" placeholder="050-0000000">
+            </div>
+            <div class="form-field">
+              <label for="contact-message">הודעה</label>
+              <textarea id="contact-message" name="message" rows="4" placeholder="ספרו לנו קצת על עצמכם ועל ילדיכם..." required=""></textarea>
+            </div>
+
+            <div class="privacy-consent">
+              <label class="privacy-consent-label">
+                <input type="checkbox" name="privacy_consent" class="privacy-consent-checkbox" required="">
+                <span>קראתי ואני מסכים/ה ל<a href="/terms" target="_blank">תנאי השימוש</a> ול<a href="/privacy" target="_blank">מדיניות הפרטיות</a></span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-primary contact-submit-btn">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              שלחו את הפנייה
+            </button>
+          </form>
+
+          <p class="form-reassurance">
+            <i class="fa-solid fa-shield-heart" aria-hidden="true"></i>
+            הפרטים שלכם שמורים אצלנו ולא יועברו לאף גורם חיצוני
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl">
+  <div class="footer-main">
+    <div class="footer-container">
+      <div class="footer-grid">
+
+        <!-- Column 1: Company Info -->
+        <div class="footer-col footer-col--brand">
+          <div class="footer-logo-wrap">
+            <img src="/assets/logo.webp" alt="בית הספר ללמידה משמחת" class="logo">
+          </div>
+          <p class="footer-tagline">מקום שבו הלמידה הופכת להרפתקה משמחת, יצירתית ומלאת חיים.</p>
+          <div class="footer-social">
+            
+            
+            
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-col">
+          <h3 class="footer-heading"><span class="footer-heading-line"></span>ניווט מהיר</h3>
+          <ul class="footer-links">
+            <li><a href="#features"><i class="fas fa-chevron-left footer-link-icon"></i>תכונות</a></li>
+            <li><a href="#about"><i class="fas fa-chevron-left footer-link-icon"></i>אודות</a></li>
+            <li><a href="#gallery"><i class="fas fa-chevron-left footer-link-icon"></i>גלריה</a></li>
+            <li><a href="#testimonials"><i class="fas fa-chevron-left footer-link-icon"></i>המלצות</a></li>
+            <li><a href="#stats"><i class="fas fa-chevron-left footer-link-icon"></i>נתונים</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Contact Info -->
+        <div class="footer-col">
+          <h3 class="footer-heading"><span class="footer-heading-line"></span>צור קשר</h3>
+          <ul class="footer-contact">
+            <li>
+              <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+              <span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span>
+            </li>
+            <li>
+              <span class="contact-icon"><i class="fas fa-phone"></i></span>
+              <span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span>
+            </li>
+            <li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+              <span class="contact-text">[business_address]</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Newsletter / Extra -->
+        <div class="footer-col footer-col--extra">
+          <h3 class="footer-heading"><span class="footer-heading-line"></span>הישארו מעודכנים</h3>
+          <p class="footer-extra-text">הצטרפו לניוזלטר שלנו וקבלו עדכונים, טיפים חינוכיים ועוד ישירות לתיבת הדואר.</p>
+          <div class="footer-newsletter">
+            <input type="email" placeholder="כתובת אימייל" class="footer-input" aria-label="הזן כתובת אימייל">
+            <button class="footer-btn" type="button">הרשמה</button>
+          </div>
+          <div class="footer-badge">
+            <i class="fas fa-graduation-cap"></i>
+            <span>למידה משמחת מאז 2010</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-inner">
+        <p class="footer-copyright">© 2026 בית הספר ללמידה משמחת. כל הזכויות שמורות.</p>
+        <div class="footer-legal">
+          <a href="/privacy">מדיניות פרטיות</a>
+          <span class="footer-divider">·</span>
+          <a href="/terms">תנאי שימוש</a>
+          <span class="footer-divider">·</span>
+          <a href="/accessibility">נגישות</a>
+          <span class="footer-divider">·</span>
+          <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+# בית הספר ללמידה משמחת — Generative Engine Optimization Map
+
+> A unique school called 'The School for Joyful Learning' where all learning is conducted through the tools of theater and music. The school embodies a creative and expressive educational philosophy, transforming traditional academic subjects into immersive artistic experiences. The brand carries a joyful, playful, and inspiring atmosphere, blending performance arts with education to create a vibrant and engaging learning environment.
+
+---
+
+## Pages
+
+### בית
+https://-543dcf98.zappy5.app
+A unique school called &#39;The School for Joyful Learning&#39; where all learning is conducted through the tools of theater and music. The school embodies a creative a
+
+## Legal & Policy
+
+### Privacy Policy
+https://-543dcf98.zappy5.app/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://-543dcf98.zappy5.app/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://-543dcf98.zappy5.app/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+## How to Contact Us
+
+- (No contact details configured yet.)
+
+### Contact form
+- URL: https://-543dcf98.zappy5.app
+- Endpoint: https://-543dcf98.zappy5.app/api/email/contact-form
+- Method: POST
+- Content-Type: application/json
+- Fields:
+  - `name` (text, required)
+  - `email` (email, required)
+  - `phone` (tel)
+  - `message` (textarea, required)
+  - `privacy_consent` (checkbox, required)
+
+---
+
+# Business Context (for LLM understanding)
+
+## About בית הספר ללמידה משמחת
+A unique school called 'The School for Joyful Learning' where all learning is conducted through the tools of theater and music. The school embodies a creative and expressive educational philosophy, transforming traditional academic subjects into immersive artistic experiences. The brand carries a joyful, playful, and inspiring atmosphere, blending performance arts with education to create a vibrant and engaging learning environment.
+
+## Services/Products
+- למידה באמצעות תיאטרון
+- למידה באמצעות מוזיקה
+
+## Target Audience
+- הורים לילדים צעירים
+- מחנכים המחפשים השראה
+- חובבי חינוך אלטרנטיבי
+
+## Industry
+חינוך
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://-543dcf98.zappy5.app/sitemap.xml
+- Robots: https://-543dcf98.zappy5.app/robots.txt
+- Flattened page text (for LLMs): https://-543dcf98.zappy5.app/llms-full.txt
