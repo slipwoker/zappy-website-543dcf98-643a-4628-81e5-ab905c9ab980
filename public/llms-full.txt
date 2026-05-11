@@ -2,13 +2,13 @@
 
 A unique school called 'The School for Joyful Learning' where all learning is conducted through the tools of theater and music. The school embodies a creative and expressive educational philosophy, transforming traditional academic subjects into immersive artistic experiences. The brand carries a joyful, playful, and inspiring atmosphere, blending performance arts with education to create a vibrant and engaging learning environment.
 
-Source: https://-543dcf98.zappy5.app
+Source: https://example.com
 
 ---
 
 ## חינוך — בית הספר ללמידה משמחת
 
-URL: https://-543dcf98.zappy5.app
+URL: https://example.com
 Description: A unique school called &#39;The School for Joyful Learning&#39; where all learning is conducted through the tools of theater and music. The school embodies a creative a
 
 חינוך — בית הספר ללמידה משמחת
@@ -720,7 +720,7 @@ Description: A unique school called &#39;The School for Joyful Learning&#39; whe
 
 ## מדיניות פרטיות
 
-URL: https://-543dcf98.zappy5.app/privacy
+URL: https://example.com/privacy
 Description: מדיניות הפרטיות שלנו - כיצד אנו אוספים, משתמשים ומגנים על המידע שלכם
 
 מדיניות פרטיות
@@ -990,7 +990,7 @@ Description: מדיניות הפרטיות שלנו - כיצד אנו אוספי
 
 ## הצהרת נגישות
 
-URL: https://-543dcf98.zappy5.app/accessibility
+URL: https://example.com/accessibility
 Description: הצהרת הנגישות שלנו - מחויבותנו לנגישות דיגיטלית
 
 הצהרת נגישות
@@ -1269,7 +1269,7 @@ Description: הצהרת הנגישות שלנו - מחויבותנו לנגיש�
 
 ## תנאי שימוש
 
-URL: https://-543dcf98.zappy5.app/terms
+URL: https://example.com/terms
 Description: תנאי השימוש באתר - הזכויות והחובות של המשתמשים
 
 תנאי שימוש
